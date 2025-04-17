@@ -1,67 +1,93 @@
-<html>
-  <head>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="chrome=1">
-    <title>evel.cn</title>
-    <link rel="icon" href="stylesheets/logo.ico" type="image/x-icon">
-    <link rel="stylesheet" href="stylesheets/styles.css">
-    <!-- require APlayer -->
-    <link rel="stylesheet" href="javascripts/APlayer.min.css">
-    <script src="javascripts/APlayer.min.js"></script>
-        
-    <!-- require MetingJS -->
-    <script src="javascripts/Meting.min.js"></script>
-    <meta name="viewport" content="width=device-width">
-    <base target="_blank"/>
-  </head>
-  <body>
-    <div class="wrapper">
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="chrome=1">
+  <title>evel.cn</title>
+  <link rel="icon" href="stylesheets/logo.ico" type="image/x-icon">
+  <link rel="stylesheet" href="stylesheets/styles.css">
+  <!-- require APlayer -->
+  <link rel="stylesheet" href="javascripts/APlayer.min.css">
+  <script src="javascripts/APlayer.min.js"></script>
+  <!-- require MetingJS -->
+  <script src="javascripts/Meting.min.js"></script>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <base target="_blank">
+  <style>
+    /* 新增样式 */
+    .container {
+      display: flex;
+      justify-content: space-between;
+      gap: 20px;
+      width: 100%;
+      max-width: 900px; /* 350 + 550 + 20px 间距 */
+      margin: 0 auto;
+    }
+    .left-box {
+      width: 350px;
+      max-height: 800px;
+      overflow-y: auto;
+      border: 1px solid #eee;
+      border-radius: 8px;
+    }
+    .right-box {
+      width: 550px;
+      max-height: 800px;
+      overflow-y: auto;
+      border: 1px solid #eee;
+      border-radius: 8px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="left-box">
       <meting-js
         auto="https://y.qq.com/n/yqq/playlist/7849448823.html"
-        list-folded=true
-        order='random'
-        autoplay=true
-        listMaxHeight=500px
-      </meting-js>
+        list-folded="true"
+        order="random"
+        autoplay="true"
+        listMaxHeight="500px"
+      ></meting-js>
+    </div>
+    <div id="embedded-content" class="right-box"></div>
   </div>
-  <div id="embedded-content" class="wrapper"></div>
-    <script>
-		fetch('https://weread.qq.com/misc/booklist/63637070_7RUASgXcs')
-		  .then(response => {
-			if (!response.ok) {
-			  throw new Error('Network response was not ok');
-			}
-			return response.text();
-		  })
-		  .then(html => {
-			const scriptTagRegex = /<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi;
-			const cleanedHtml = html.replace(scriptTagRegex, '');
-			
-			const parser = new DOMParser();
-			const doc = parser.parseFromString(cleanedHtml, 'text/html');
+  <script>
+    fetch('https://weread.qq.com/misc/booklist/63637070_7RUASgXcs')
+      .then(response => {
+        if (!response.ok) {
+          throw new Error('Network response was not ok');
+        }
+        return response.text();
+      })
+      .then(html => {
+        const scriptTagRegex = /<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi;
+        const cleanedHtml = html.replace(scriptTagRegex, '');
+        
+        const parser = new DOMParser();
+        const doc = parser.parseFromString(cleanedHtml, 'text/html');
 
-			const elementsToRemove = doc.querySelectorAll('.booklist_footer');
-			elementsToRemove.forEach(el => el.parentNode.removeChild(el));
-			const elementsToRemove2 = doc.querySelectorAll('.booklist_footer_button');
-			elementsToRemove2.forEach(el => el.parentNode.removeChild(el));
+        const elementsToRemove = doc.querySelectorAll('.booklist_footer');
+        elementsToRemove.forEach(el => el.parentNode.removeChild(el));
+        const elementsToRemove2 = doc.querySelectorAll('.booklist_footer_button');
+        elementsToRemove2.forEach(el => el.parentNode.removeChild(el));
 
-			const elementsToUpdate = doc.querySelectorAll('.booklist_header');
-			elementsToUpdate.forEach(el => {
-			  el.textContent = ''; 
-			});
+        const elementsToUpdate = doc.querySelectorAll('.booklist_header');
+        elementsToUpdate.forEach(el => {
+          el.textContent = ''; 
+        });
 
-			const processedHtml = doc.body.innerHTML;
-			document.getElementById('embedded-content').innerHTML = processedHtml;
-			//console.log(processedHtml);
-		  })
-		  .catch(error => {
-			console.error('There was a problem with the fetch operation:', error);
-		  });	
-    </script>
+        const processedHtml = doc.body.innerHTML;
+        document.getElementById('embedded-content').innerHTML = processedHtml;
+      })
+      .catch(error => {
+        console.error('There was a problem with the fetch operation:', error);
+      });
+  </script>
   <p align="center">
     <small>
-       Music & books shared By <!--<a href="./blog" target="_blank">-->Evel<!--</a>-->◎2025 
+      Music & books shared By Evel ?2025
     </small>
   </p>
-  </body>
+</body>
 </html>
