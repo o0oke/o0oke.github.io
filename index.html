@@ -11,6 +11,8 @@
   <script src="javascripts/APlayer.min.js"></script>
   <!-- require MetingJS -->
   <script src="javascripts/Meting.min.js"></script>
+  <!-- require Marked.js for Markdown parsing -->
+  <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <base target="_blank">
   <style>
@@ -31,7 +33,7 @@
     }
     .tabs {
       display: flex;
-      justify-content: flex-end; /* 靠右对齐 */
+      justify-content: flex-end;
       border-bottom: 1px solid #eee;
       margin-bottom: 20px;
     }
@@ -43,8 +45,8 @@
       border-radius: 5px 5px 0 0;
       background-color: #f9f9f9;
       text-align: center;
-      margin-left: 5px; /* 添加左边距 */
-      flex: 0 0 auto; /* 不自动伸缩 */
+      margin-left: 5px;
+      flex: 0 0 auto;
     }
     .tab.active {
       background-color: #fff;
@@ -56,7 +58,7 @@
       padding: 20px;
       border: 1px solid #eee;
       border-radius: 5px;
-      height: calc(100vh - 140px); /* 全屏高度减去页签和底边的固定高度 */
+      height: calc(100vh - 140px);
       overflow-y: auto;
       background-color: #fff;
     }
@@ -71,30 +73,40 @@
     .article-header {
       cursor: pointer;
       padding-bottom: 10px;
-      font-size: 16px; /* 设置页签字体大小 */
+      font-size: 16px;
     }
     .article-header h2 {
       display: inline;
-      font-size: 16px; /* 设置页签字体大小 */
+      font-size: 16px;
     }
     .article-header:after {
       content: '';
       margin-left: 5px;
       transition: transform 0.3s;
-      font-size: 16px; /* 设置页签字体大小 */
+      font-size: 16px;
     }
     .article-header.expanded:after {
       transform: rotate(180deg);
     }
     .article-content {
-      display: none; /* 默认隐藏内容 */
+      display: none;
       padding-top: 15px;
     }
     .article-item.expanded .article-content {
-      display: block; /* 展开时显示内容 */
+      display: block;
     }
     .article-item.expanded .article-header:after {
       transform: rotate(0deg);
+    }
+    .article-content img {
+      max-width: 100%;
+      height: auto;
+      display: block;
+      margin: 10px 0;
+    }
+    .article-content p {
+      margin: 10px 0;
+      line-height: 1.6;
     }
     footer {
       position: fixed;
@@ -106,6 +118,7 @@
       border-top: 1px solid #eee;
     }
   </style>
+<base target="_blank">
 </head>
 <body>
   <div class="tab-container">
@@ -127,28 +140,7 @@
       <div id="embedded-content"></div>
     </div>
     <div id="articles" class="tab-content">
-      <div class="article-item">
-        <div class="article-header" onclick="toggleArticle(this)">
-          <h2>2025-06-15 Bicycle riding with Mingo</h2>
-        </div>
-        <div class="article-content">
-          <img src="https://down-files.2bulu.com/f/d1?downParams=OcPFg9S0UmF8dC8r5%2FpwGw%3D%3D%0A" alt="荷花1">
-          <img src="https://down-files.2bulu.com/f/d1?downParams=OcPFg9S0UmEhPJl74VISIw%3D%3D%0A" alt="荷花2">
-          <p>松山湖中心公园的荷塘</p>
-        </div>
-      </div>
-
-      <!-- 示例图文内容 -->
-      <div class="article-item">
-        <div class="article-header" onclick="toggleArticle(this)">
-          <h2>2025-06-10 骑行记</h2>
-        </div>
-        <div class="article-content">
-          <img src="https://down-files.2bulu.com/f/d1?downParams=bFT5uEBJKwEuVso4z%2F%2FWcQ%3D%3D%0A" alt="ride">
-          <p>骑行很累但很爽</p>
-        </div>
-      </div>
-      
+      <!-- 内容将从markdown文件动态加载 -->
     </div>
   </div>
 
@@ -181,7 +173,62 @@
         .catch(error => {
           console.error('There was a problem with the fetch operation:', error);
         });
+
+      // 加载Stories内容（从markdown文件）
+      loadStories();
     };
+
+    // 加载Stories内容
+    async function loadStories() {
+      const articlesContainer = document.getElementById('articles');
+      
+      // 定义要加载的markdown文件
+      const mdFiles = ['post/misc.md', 'post/collection.md'];
+      
+      for (const file of mdFiles) {
+        try {
+          const response = await fetch(file);
+          if (!response.ok) {
+            console.warn(`Failed to load ${file}`);
+            continue;
+          }
+          const markdown = await response.text();
+          const articleHtml = createArticleFromMarkdown(markdown);
+          articlesContainer.innerHTML += articleHtml;
+        } catch (error) {
+          console.error(`Error loading ${file}:`, error);
+        }
+      }
+    }
+
+    // 将Markdown转换为文章HTML
+    function createArticleFromMarkdown(markdown) {
+      // 解析markdown为HTML
+      const htmlContent = marked.parse(markdown);
+      
+      // 提取标题（第一个h2或h1）
+      const tempDiv = document.createElement('div');
+      tempDiv.innerHTML = htmlContent;
+      const heading = tempDiv.querySelector('h2') || tempDiv.querySelector('h1');
+      const title = heading ? heading.textContent : '无标题';
+      
+      // 移除标题，剩下的作为内容
+      if (heading) {
+        heading.remove();
+      }
+      const content = tempDiv.innerHTML;
+      
+      return `
+        <div class="article-item">
+          <div class="article-header" onclick="toggleArticle(this)">
+            <h2>${title}</h2>
+          </div>
+          <div class="article-content">
+            ${content}
+          </div>
+        </div>
+      `;
+    }
 
     function switchTab(tabId) {
       const tabs = document.querySelectorAll('.tab');
@@ -203,7 +250,7 @@
   </script>
   <footer>
     <small>
-      Musics, books, stories shared By Evel@2025
+      Musics, books, stories shared By Evel@2026
     </small>
   </footer>
 </body>
