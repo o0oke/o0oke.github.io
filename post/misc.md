@@ -1,6 +1,6 @@
 Here is the page of miscellany records. like some videos or other media.
 
-<h2 id="m1">Chapter 1 - Some Videos</h2>
+<h2 id="m1">Videos</h2>
 
 I collect & make some videos when I am free.
 
@@ -11,7 +11,7 @@ I collect & make some videos when I am free.
 * The <a href="https://v.youku.com/v_show/id_XMjMxNzU0MTk2.html" target="_blank">rock&roll version of Cannon</a> which I love, still remember and greatly touched when make it as the ending background music  of the team's annual party at 2017.
 
 
-<h2 id="m2">Chapter 2 - Notes of my laptop, a Thinkpad X201 with Manjaro and a DT with UOS.</h2>
+<h2 id="m2">Notes of my laptop, a Thinkpad X201 with Manjaro and a DT with UOS.</h2>
 
 Learnning and do some summary for the personal development. I always use the ngrok to setup a free host for it. to test some development on the page of notes
 And I also setup a PC which is install UOS v20 for powerful usage for personal research.
@@ -21,7 +21,7 @@ And I also setup a PC which is install UOS v20 for powerful usage for personal r
 </video>
 
 <br>
-<h2 id="m3">Chapter 3 - About social network</h2>
+<h2 id="m3">About social network</h2>
 
 General speaking, it's a long story.
 
@@ -30,3 +30,4 @@ General speaking, it's a long story.
 * I start to use product of Google, like Gtalk, BUZZ, and later <i class="fa fa-google-plus"></i>, also facebook <i class="fa fa-facebook-official" aria-hidden="true" style="color:blue"></i>, twitter <i class="fa fa-twitter"></i>, whatsapp <i class="fa fa-whatsapp" aria-hidden="true"></i>, telegram <i class="fa fa-telegram" aria-hidden="true"></i> when I worked in NV shenzhen, and keep my Google Voice number +1 5708800119 by now, maybe you can leave a message if you are abroad. Sure I can reveive the message freely by mail.
 * I have one <i class="fa fa-weibo" style="color:red"></i>, just called 'Evel' but I haven't used it for a long time since I using <i class="fa fa-weixin" style="color:green"></i>. :(
 * Yes, now I setup this website here for life records, sharing. The page just setup a messager button for who want leave me a message.
+
